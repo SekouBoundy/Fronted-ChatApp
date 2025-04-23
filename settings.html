@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | Campus Connect</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.244.0/lucide.min.js"></script>
+  <style>
+    /* Base styles */
+    :root {
+      /* Colors - Dark Theme */
+      --bg-primary: #1e293b;
+      --bg-secondary: #0f172a;
+      --bg-tertiary: #1e293b;
+      --bg-highlight: rgba(59, 130, 246, 0.1);
+      --text-primary: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --border-color: #334155;
+      --accent-blue: #3b82f6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-yellow: #eab308;
+      --accent-pink: #ec4899;
+      --accent-teal: #14b8a6;
+      --accent-orange: #f97316;
+      --accent-red: #ef4444;
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+    }
+
+    /* Header */
+    .settings-header {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .settings-title {
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .settings-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      margin-top: 0.25rem;
+    }
+
+    .back-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .back-button:hover {
+      background-color: rgba(59, 130, 246, 0.1);
+    }
+
+    .back-button svg {
+      margin-right: 0.5rem;
+    }
+
+    /* Settings sections */
+    .settings-container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .settings-card {
+      background-color: var(--bg-primary);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      box-shadow: var(--card-shadow);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-icon {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.5rem;
+      background-color: rgba(59, 130, 246, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 0.75rem;
+    }
+
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    /* Settings rows */
+    .settings-row {
+      margin-bottom: 1.5rem;
+    }
+
+    .settings-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .settings-label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+
+    .settings-description {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.75rem;
+    }
+
+    /* Avatar section */
+    .avatar-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    @media (max-width: 768px) {
+      .avatar-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .avatar-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .avatar-option {
+      position: relative;
+      aspect-ratio: 1;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      overflow: hidden;
+      background-color: var(--bg-tertiary);
+      z-index: 1;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .avatar-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .avatar-option.selected {
+      border-color: var(--accent-blue);
+      position: relative;
+    }
+
+    .avatar-option.selected::after {
+      content: '';
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      width: 1.5rem;
+      height: 1.5rem;
+      background-color: var(--accent-blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 0 2px var(--bg-primary);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 12px;
+    }
+
+    .avatar-option img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 0.5rem;
+      pointer-events: none;
+    }
+
+    /* Color selection */
+    .color-options {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .color-option {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+
+    .color-option:hover {
+      transform: scale(1.1);
+    }
+
+    .color-option.selected {
+      border-color: var(--text-primary);
+      transform: scale(1.1);
+      box-shadow: 0 0 0 2px var(--bg-primary);
+    }
+
+    /* Form controls */
+    .select-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 15rem;
+    }
+
+    .select-control {
+      width: 100%;
+      padding: 0.625rem 1rem;
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      appearance: none;
+      cursor: pointer;
+    }
+
+    .select-wrapper::after {
+      content: '';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.75rem;
+      height: 0.75rem;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+    }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      width: 3.25rem;
+      height: 1.75rem;
+      flex-shrink: 0;
+    }
+
+    .toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--border-color);
+      border-radius: 1.75rem;
+      transition: 0.3s;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 1.25rem;
+      width: 1.25rem;
+      left: 0.25rem;
+      bottom: 0.25rem;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: var(--accent-blue);
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(1.5rem);
+    }
+
+    /* Action buttons */
+    .action-buttons {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      /* margin-top: 1.5rem; */
+    }
+
+    .button {
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .button-secondary {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--border-color);
+    }
+
+    .button-primary {
+      background-color: var(--accent-blue);
+      color: white;
+    }
+
+    .button-primary:hover {
+      background-color: #2563eb;
+    }
+
+    /* Colors */
+    .bg-blue { background-color: var(--accent-blue); }
+    .bg-purple { background-color: var(--accent-purple); }
+    .bg-green { background-color: var(--accent-green); }
+    .bg-yellow { background-color: var(--accent-yellow); }
+    .bg-pink { background-color: var(--accent-pink); }
+    .bg-teal { background-color: var(--accent-teal); }
+    .bg-orange { background-color: var(--accent-orange); }
+    .bg-red { background-color: var(--accent-red); }
+
+    /* Toast notifications */
+    .settings-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background-color: var(--accent-blue);
+      color: white;
+      padding: 0.75rem 1.25rem;
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 100;
+      transform: translateY(100%);
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .settings-toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-icon {
+      display: flex;
+    }
+
+    /* Multi-row layout for settings with buttons */
+    .multi-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Danger button */
+    .button-danger {
+      background-color: var(--accent-red);
+      color: white;
+    }
+
+    .button-danger:hover {
+      background-color: #dc2626;
+    }
+
+    /* Light mode */
+    body.light-mode {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8fafc;
+      --bg-tertiary: #f1f5f9;
+      --bg-highlight: rgba(59, 130, 246, 0.05);
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #94a3b8;
+      --border-color: #e2e8f0;
+    }
+
+    .avatar-pagination {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .avatar-page {
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      background-color: var(--bg-tertiary);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .avatar-page:hover {
+      background-color: var(--border-color);
+    }
+
+    .avatar-page.active {
+      background-color: var(--accent-blue);
+      color: white;
+    }
+
+    .avatar-search {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .avatar-search-input {
+      flex: 1;
+      padding: 0.625rem 1rem;
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+    }
+
+    .avatar-search-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    /* Avatar category tabs */
+    .avatar-categories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .avatar-category {
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background-color: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+      z-index: 2;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .avatar-category:hover {
+      background-color: var(--border-color);
+    }
+
+    .avatar-category.active {
+      background-color: var(--accent-blue);
+      color: white;
+    }
+  </style>
+</head>
+<body id="body">
+  <div class="settings-header">
+    <div>
+      <h1 class="settings-title">Settings</h1>
+      <p class="settings-subtitle">Customize your anonymous experience</p>
+    </div>
+    <button class="back-button" id="back-to-chat" onclick="window.location.href='/chat';">
+      <i data-lucide="arrow-left"></i>
+      Back to Chat
+    </button>
+  </div>
+
+  <div class="settings-container">
+    <!-- Appearance Section -->
+    <div class="settings-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i data-lucide="palette"></i>
+        </div>
+        <h2 class="section-title">Appearance</h2>
+      </div>
+
+      <!-- Avatar Selection -->
+      <div class="settings-row">
+        <label class="settings-label">Avatar</label>
+        <p class="settings-description">Choose your anonymous profile picture</p>
+        
+        <div class="avatar-categories">
+          <div class="avatar-category active" data-category="all">All</div>
+          <div class="avatar-category" data-category="characters">Characters</div>
+          <div class="avatar-category" data-category="neutral">Neutral</div>
+          <div class="avatar-category" data-category="bottts">Bottts</div>
+          <div class="avatar-category" data-category="people">People</div>
+          <div class="avatar-category" data-category="objects">Objects</div>
+        </div>
+        
+        <div class="avatar-search">
+          <input type="text" class="avatar-search-input" placeholder="Search avatars..." id="avatar-search">
+        </div>
+        
+        <div class="avatar-grid" id="avatar-grid">
+          <!-- Avatars will be loaded dynamically -->
+        </div>
+
+        <div class="avatar-pagination" id="avatar-pagination">
+          <!-- Pagination will be loaded dynamically -->
+        </div>
+      </div>
+
+      <!-- Color Selection -->
+      <div class="settings-row">
+        <label class="settings-label">Avatar Background</label>
+        <p class="settings-description">Choose a color for your avatar background</p>
+        
+        <div class="color-options">
+          <div class="color-option bg-blue selected" data-color="blue"></div>
+          <div class="color-option bg-purple" data-color="purple"></div>
+          <div class="color-option bg-green" data-color="green"></div>
+          <div class="color-option bg-yellow" data-color="yellow"></div>
+          <div class="color-option bg-pink" data-color="pink"></div>
+          <div class="color-option bg-teal" data-color="teal"></div>
+          <div class="color-option bg-orange" data-color="orange"></div>
+          <div class="color-option bg-red" data-color="red"></div>
+        </div>
+      </div>
+
+      <!-- Theme Selection -->
+      <div class="settings-row">
+        <label class="settings-label">Theme</label>
+        <p class="settings-description">Choose light or dark mode</p>
+        
+        <div class="select-wrapper">
+          <select class="select-control" id="theme-select">
+            <option value="dark">Dark Mode</option>
+            <option value="light">Light Mode</option>
+            <option value="system">System Default</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Chat Bubble Style -->
+      <div class="settings-row">
+        <label class="settings-label">Chat Bubble Style</label>
+        <p class="settings-description">Choose your preferred message bubble style</p>
+        
+        <div class="select-wrapper">
+          <select class="select-control" id="bubble-style-select">
+            <option value="modern">Modern (Default)</option>
+            <option value="classic">Classic</option>
+            <option value="minimal">Minimal</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Privacy & Security Section -->
+    <div class="settings-card">
+      <div class="section-header">
+        <div class="section-icon">
+          <i data-lucide="shield"></i>
+        </div>
+        <h2 class="section-title">Privacy & Security</h2>
+      </div>
+
+      <!-- Online Status -->
+      <div class="settings-row">
+        <label class="settings-label">Online Status</label>
+        <p class="settings-description">Show when you're active in the chat</p>
+        
+        <div class="select-wrapper">
+          <select class="select-control" id="online-status-select">
+            <option value="online">Online</option>
+            <option value="invisible">Invisible</option>
+            <option value="away">Away</option>
+          </select>
+        </div>
+      </div>
+
+    
+      <div class="settings-row">
+        <div class="multi-row">
+          <div>
+            <label class="settings-label">Logout</label>
+            <p class="settings-description">Sign out of your account</p>
+          </div>
+          <button class="button button-danger" id="logout-button">Logout</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Action buttons at bottom of page -->
+    <div class="action-buttons">
+      <button class="button button-secondary" id="cancel-button">Cancel</button>
+      <button class="button button-primary" id="save-button">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="settings-toast" id="settings-toast">
+    <div class="toast-icon">
+      <i data-lucide="check-circle"></i>
+    </div>
+    <span id="toast-message">Settings saved successfully!</span>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.244.0/lucide.min.js"></script>
+
+  <script>
+  // Main script for the Settings page
+  // Add this to your initializeButtons function
+const logoutButton = document.getElementById('logout-button');
+if (logoutButton) {
+  logoutButton.addEventListener('click', function() {
+    // Clear user data from localStorage
+    localStorage.clear();
+    // Show toast message
+    showToast('Logging out...');
+    // Redirect to login page after delay
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 1500);
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize Lucide icons
+  if (typeof lucide !== 'undefined' && lucide.createIcons) {
+    lucide.createIcons();
+  }
+  
+  // === Settings state ===
+  window.state = {
+    selectedAvatar: localStorage.getItem('selectedAvatar') || 'avatar-1',
+    selectedColor: localStorage.getItem('selectedColor') || 'blue',
+    selectedTheme: localStorage.getItem('theme') || 'dark',
+    currentPage: 1,
+    itemsPerPage: 18
+  };
+  
+  // === Avatar generation ===
+  function generateAvatarSet(count = 200) {
+    // Categories as instructed
+    const categories = ['characters', 'neutral', 'bottts', 'people', 'objects'];
+    
+    // Map categories to specific DiceBear styles
+    const categoryStyles = {
+      'characters': ['adventurer', 'avataaars', 'big-ears', 'big-smile', 'thumbs'],
+      'neutral': ['adventurer-neutral', 'avataaars-neutral', 'big-ears-neutral', 'pixel-art-neutral'],
+      'bottts': ['bottts'], 
+      'people': ['open-peeps', 'personas', 'pixel-art'],
+      'objects': ['initials', 'shapes']
+    };
+    
+    // Seeds for better naming
+    const categorySeeds = {
+      'characters': ['Hero', 'Wizard', 'Knight', 'Pirate', 'Ninja', 'Archer', 'Monk'],
+      'neutral': ['Neutral', 'Plain', 'Simple', 'Basic', 'Clean'],
+      'bottts': ['Robot', 'Droid', 'Android', 'Cyborg', 'Machine', 'Bot'],
+      'people': ['Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'Elijah', 'Sophia'],
+      'objects': ['Diamond', 'Cube', 'Sphere', 'Pyramid', 'Cylinder', 'Gem', 'Crystal']
+    };
+    
+    const avatars = [];
+    let id = 1;
+    
+    // Create balanced categories
+    const perCategory = Math.ceil(count / categories.length);
+    
+    categories.forEach(category => {
+      const styles = categoryStyles[category];
+      const seeds = categorySeeds[category];
+      
+      for (let i = 0; i < perCategory && avatars.length < count; i++) {
+        const style = styles[i % styles.length];
+        const seed = seeds[i % seeds.length] + '-' + id;
+        
+        // Create correct URL for DiceBear API v7.x
+        let url = `https://api.dicebear.com/7.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
+        
+        // Add style-specific parameters
+        if (style.includes('avataaars')) {
+          url += '&mouth=smile&top=shortHair';
+        } else if (style.includes('bottts')) {
+          url += '&colorful=1&mouthChance=100';
+        } else if (style.includes('shapes')) {
+          url += '&backgroundColor=white';
+        }
+        
+        avatars.push({
+          id: `avatar-${id}`,
+          category,
+          url,
+          tags: [style, seed, category]
+        });
+        
+        id++;
+      }
+    });
+    
+    return avatars;
+  }
+
+  // Fix DiceBear style URLs that need special handling
+  function fixDiceBearStyles() {
+    // Map of styles that need conversion for the API
+    const styleMap = {
+      'avataaars-neutral': 'avataaars', // Some styles don't exist directly, use parent style with params
+      'big-ears-neutral': 'big-ears',
+      'pixel-art-neutral': 'pixel-art'
+    };
+    
+    // Fix URLs for any avatars that might have invalid styles
+    if (window.allAvatars) {
+      window.allAvatars.forEach(avatar => {
+        // Extract style from URL
+        const urlMatch = avatar.url.match(/api\.dicebear\.com\/7\.x\/([^\/]+)\/svg/);
+        if (urlMatch) {
+          const style = urlMatch[1];
+          if (styleMap[style]) {
+            // Replace with correct style and add neutral parameters
+            avatar.url = avatar.url.replace(
+              `/7.x/${style}/`, 
+              `/7.x/${styleMap[style]}/`
+            ) + '&neutral=true';
+          }
+        }
+      });
+    }
+  }
+
+  // === Avatar grid and filtering ===
+  function loadAvatarPage(page, category = 'all', searchTerm = '') {
+    window.state.currentPage = page;
+    
+    const avatarGrid = document.getElementById('avatar-grid');
+    if (!avatarGrid) return;
+    
+    // Clear current avatars
+    avatarGrid.innerHTML = '';
+    
+    // Filter avatars
+    const filteredAvatars = window.allAvatars.filter(avatar => {
+      const categoryMatch = category === 'all' || avatar.category === category;
+      const searchMatch = !searchTerm || 
+                      avatar.id.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                      avatar.category.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                      (avatar.tags && avatar.tags.some(tag => 
+                        tag.toLowerCase().includes(searchTerm.toLowerCase())
+                      ));
+      return categoryMatch && searchMatch;
+    });
+    
+    // Get current page avatars
+    const startIndex = (page - 1) * window.state.itemsPerPage;
+    const currentPageAvatars = filteredAvatars.slice(startIndex, startIndex + window.state.itemsPerPage);
+    
+    // No results message
+    if (currentPageAvatars.length === 0) {
+      const noResults = document.createElement('div');
+      noResults.className = 'no-results';
+      noResults.textContent = 'No avatars found matching your criteria';
+      noResults.style.gridColumn = '1 / -1';
+      noResults.style.textAlign = 'center';
+      noResults.style.padding = '2rem';
+      noResults.style.color = 'var(--text-secondary)';
+      avatarGrid.appendChild(noResults);
+      updatePagination(page, 0);
+      return;
+    }
+    
+    // Create avatar elements
+    currentPageAvatars.forEach(avatar => {
+      const avatarElement = document.createElement('div');
+      avatarElement.className = 'avatar-option';
+      
+      // Add the current background color class
+      avatarElement.classList.add(`bg-${window.state.selectedColor}`);
+      
+      avatarElement.dataset.avatar = avatar.id;
+      avatarElement.dataset.category = avatar.category;
+      
+      // Set selected state
+      if (avatar.id === window.state.selectedAvatar) {
+        avatarElement.classList.add('selected');
+      }
+      
+      // Create avatar image
+      const img = document.createElement('img');
+      img.src = avatar.url;
+      img.alt = `Avatar ${avatar.id}`;
+      
+      avatarElement.appendChild(img);
+      avatarGrid.appendChild(avatarElement);
+      
+      // Avatar selection handler
+      avatarElement.addEventListener('click', function() {
+        document.querySelectorAll('.avatar-option').forEach(option => {
+          option.classList.remove('selected');
+        });
+        this.classList.add('selected');
+        window.state.selectedAvatar = this.dataset.avatar;
+        showToast(`Avatar selected`);
+      });
+    });
+    
+    // Update pagination
+    updatePagination(page, Math.ceil(filteredAvatars.length / window.state.itemsPerPage));
+  }
+  
+  // === Pagination ===
+  function updatePagination(currentPage, totalPages) {
+    const paginationContainer = document.getElementById('avatar-pagination');
+    if (!paginationContainer) return;
+    
+    paginationContainer.innerHTML = '';
+    
+    // Don't show pagination if no pages or only one page
+    if (totalPages <= 1) return;
+    
+    // Determine range of pages to show
+    let startPage = Math.max(1, currentPage - 2);
+    let endPage = Math.min(totalPages, startPage + 4);
+    
+    // Adjust start if we're near the end
+    if (endPage - startPage < 4) {
+      startPage = Math.max(1, endPage - 4);
+    }
+    
+    // First page button if needed
+    if (startPage > 1) {
+      addPageButton(1, currentPage === 1);
+      if (startPage > 2) {
+        addEllipsis();
+      }
+    }
+    
+    // Page buttons
+    for (let i = startPage; i <= endPage; i++) {
+      addPageButton(i, currentPage === i);
+    }
+    
+    // Last page button if needed
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        addEllipsis();
+      }
+      addPageButton(totalPages, currentPage === totalPages);
+    }
+    
+    // Helper functions
+    function addPageButton(pageNum, isActive) {
+      const pageButton = document.createElement('div');
+      pageButton.className = 'avatar-page';
+      if (isActive) pageButton.classList.add('active');
+      pageButton.textContent = pageNum;
+      pageButton.addEventListener('click', () => {
+        const activeCategory = document.querySelector('.avatar-category.active');
+        const category = activeCategory ? activeCategory.dataset.category : 'all';
+        const searchTerm = document.getElementById('avatar-search')?.value || '';
+        loadAvatarPage(pageNum, category, searchTerm);
+      });
+      paginationContainer.appendChild(pageButton);
+    }
+    
+    function addEllipsis() {
+      const ellipsis = document.createElement('div');
+      ellipsis.className = 'avatar-page';
+      ellipsis.style.cursor = 'default';
+      ellipsis.textContent = '...';
+      paginationContainer.appendChild(ellipsis);
+    }
+  }
+  
+  // === Category and search filtering ===
+  function initializeAvatarFiltering() {
+    const avatarCategories = document.querySelectorAll('.avatar-category');
+    
+    // Category tabs
+    avatarCategories.forEach(category => {
+      // Remove any existing event listeners (to prevent duplicates)
+      const newCategory = category.cloneNode(true);
+      category.parentNode.replaceChild(newCategory, category);
+      
+      newCategory.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Update active class
+        document.querySelectorAll('.avatar-category').forEach(cat => {
+          cat.classList.remove('active');
+        });
+        this.classList.add('active');
+        
+        // Apply category filter
+        const selectedCategory = this.getAttribute('data-category');
+        console.log('Category selected:', selectedCategory);
+        
+        // Clear search
+        const avatarSearch = document.getElementById('avatar-search');
+        if (avatarSearch) {
+          avatarSearch.value = '';
+        }
+        
+        // Load first page with selected category
+        loadAvatarPage(1, selectedCategory, '');
+      });
+    });
+    
+    // Search field
+    const avatarSearch = document.getElementById('avatar-search');
+    if (avatarSearch) {
+      avatarSearch.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const activeCategory = document.querySelector('.avatar-category.active');
+        const category = activeCategory ? activeCategory.dataset.category : 'all';
+        
+        loadAvatarPage(1, category, searchTerm);
+      });
+    }
+  }
+  
+  // === Color selection ===
+  function initializeColorSelection() {
+    const colorOptions = document.querySelectorAll('.color-option');
+    
+    // Update UI to match state
+    function updateColorSelection() {
+      // Update color selector UI
+      colorOptions.forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      const selectedElement = document.querySelector(`.color-option[data-color="${window.state.selectedColor}"]`);
+      if (selectedElement) {
+        selectedElement.classList.add('selected');
+      }
+      
+      // Apply the color to all avatar elements
+      const avatarOptions = document.querySelectorAll('.avatar-option');
+      avatarOptions.forEach(avatar => {
+        // Remove any existing color classes
+        avatar.classList.remove('bg-blue', 'bg-purple', 'bg-green', 'bg-yellow', 
+                               'bg-pink', 'bg-teal', 'bg-orange', 'bg-red');
+        
+        // Add the selected color class
+        avatar.classList.add(`bg-${window.state.selectedColor}`);
+      });
+    }
+    
+    // Initialize selection
+    updateColorSelection();
+    
+    // Handle color clicks
+    colorOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        window.state.selectedColor = this.dataset.color;
+        updateColorSelection();
+        showToast(`Color selected`);
+      });
+    });
+  }
+  
+  // === Theme handling ===
+  function initializeThemeHandling() {
+    const themeSelect = document.getElementById('theme-select');
+    if (!themeSelect) return;
+    
+    // Set initial theme
+    themeSelect.value = window.state.selectedTheme;
+    if (window.state.selectedTheme === 'light') {
+      document.body.classList.add('light-mode');
+    }
+    
+    // Theme change handler
+    themeSelect.addEventListener('change', function() {
+      window.state.selectedTheme = this.value;
+      
+      if (window.state.selectedTheme === 'light') {
+        document.body.classList.add('light-mode');
+      } else {
+        document.body.classList.remove('light-mode');
+      }
+    });
+  }
+  
+  // === Save and cancel buttons ===
+  function initializeButtons() {
+    const saveButton = document.getElementById('save-button');
+    const cancelButton = document.getElementById('cancel-button');
+    
+    // Save settings
+    if (saveButton) {
+      saveButton.addEventListener('click', function() {
+        // Save to localStorage
+        localStorage.setItem('selectedAvatar', window.state.selectedAvatar);
+        localStorage.setItem('selectedColor', window.state.selectedColor);
+        localStorage.setItem('theme', window.state.selectedTheme);
+        
+        showToast('Settings saved successfully!');
+        
+        // Redirect after delay
+        setTimeout(() => {
+          try {
+            window.location.href = '/chat';
+          } catch (error) {
+            console.error('Navigation error:', error);
+          }
+        }, 1500);
+      });
+    }
+    
+    // Cancel
+    if (cancelButton) {
+      cancelButton.addEventListener('click', function() {
+        window.location.href = '/chat';
+      });
+    }
+  }
+  
+  // === Toast notifications ===
+  function showToast(message) {
+    const settingsToast = document.getElementById('settings-toast');
+    const toastMessage = document.getElementById('toast-message');
+    
+    if (settingsToast && toastMessage) {
+      toastMessage.textContent = message;
+      settingsToast.classList.add('show');
+      
+      setTimeout(() => {
+        settingsToast.classList.remove('show');
+      }, 3000);
+    }
+  }
+  
+  // === Initialization ===
+  try {
+    // Generate avatars
+    window.allAvatars = generateAvatarSet(200);
+    
+    // Fix any style issues
+    fixDiceBearStyles();
+    
+    // Initialize UI
+    initializeAvatarFiltering();
+    initializeColorSelection();
+    initializeThemeHandling();
+    initializeButtons();
+    
+    // Load first page
+    loadAvatarPage(1);
+    
+    console.log('Settings page initialized successfully!');
+  } catch (error) {
+    console.error('Error initializing settings page:', error);
+  }
+});    
+  </script>
+</body>
+</html>
